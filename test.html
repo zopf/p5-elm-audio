@@ -1,0 +1,26 @@
+<html>
+
+<head>
+
+  <script src="http://cdn.jsdelivr.net/p5.js/0.3.5/p5.min.js"></script>
+  <script src="http://cdn.jsdelivr.net/p5.js/0.3.5/addons/p5.dom.js"></script>
+  <script src="http://cdn.jsdelivr.net/p5.js/0.3.5/addons/p5.sound.js"></script>
+
+</head>
+
+<body>
+<script>
+  var mic;
+function setup(){
+  mic = new p5.AudioIn()
+  mic.start();
+}
+function draw(){
+  background(0);
+  micLevel = mic.getLevel();
+  ellipse(width/2, constrain(height-micLevel*height*5, 0, height), 10, 10);
+}
+</script>
+
+</body>
+</html>

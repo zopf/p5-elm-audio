@@ -41,11 +41,12 @@
         // fft bass, mid, highs
         fft.analyze();
         bassLevel = fft.getEnergy("bass");
-        midLevel = fft.getEnergy("mid");
-        highLevel = fft.getEnergy("treble");
+        midLevel = fft.getEnergy("lowMid");
+        highLevel = fft.getEnergy("mid") * 2;
         eat.ports.bassLevel.send(bassLevel);
         eat.ports.midLevel.send(midLevel);
         eat.ports.highLevel.send(highLevel);
+        // console.log(bassLevel, midLevel, highLevel);
       }
 
       function getAvgMicLevel(inputLevel) {

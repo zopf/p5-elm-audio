@@ -29,13 +29,15 @@ Elm.ElmAudioTest.make = function (_elm) {
    var Time = Elm.Time.make(_elm);
    var Window = Elm.Window.make(_elm);
    var _op = {};
-   var createColor = function (x) {
+   var createColor = F3(function (r,
+   g,
+   b) {
       return A4(Color.rgba,
-      Basics.floor(x * 1280.0),
-      111,
-      111,
+      Basics.floor(r),
+      Basics.floor(g),
+      Basics.floor(b),
       0.6);
-   };
+   });
    var c = 400;
    var b = 50;
    var display = F3(function (x,
@@ -53,16 +55,30 @@ Elm.ElmAudioTest.make = function (_elm) {
               myColor,
               Graphics.Collage.circle(c * x + b)))]));}
          _E.Case($moduleName,
-         "between lines 14 and 16");
+         "between lines 16 and 18");
       }();
    });
+   var highLevel = Native.Ports.portIn("highLevel",
+   Native.Ports.incomingSignal(function (v) {
+      return typeof v === "number" ? v : _E.raise("invalid input, expecting JSNumber but got " + v);
+   }));
+   var midLevel = Native.Ports.portIn("midLevel",
+   Native.Ports.incomingSignal(function (v) {
+      return typeof v === "number" ? v : _E.raise("invalid input, expecting JSNumber but got " + v);
+   }));
+   var bassLevel = Native.Ports.portIn("bassLevel",
+   Native.Ports.incomingSignal(function (v) {
+      return typeof v === "number" ? v : _E.raise("invalid input, expecting JSNumber but got " + v);
+   }));
+   var myColor = A4(Signal.lift3,
+   createColor,
+   bassLevel,
+   midLevel,
+   highLevel);
    var micLevel = Native.Ports.portIn("micLevel",
    Native.Ports.incomingSignal(function (v) {
       return typeof v === "number" ? v : _E.raise("invalid input, expecting JSNumber but got " + v);
    }));
-   var myColor = A2(Signal.lift,
-   createColor,
-   micLevel);
    var main = A4(Signal.lift3,
    display,
    micLevel,

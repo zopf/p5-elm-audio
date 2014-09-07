@@ -14,23 +14,38 @@
       var bufLen = 5;
       var bufIdx = 0;
       var micLevel = 0;
+      var bassLevel = 0, midLevel=0, highLevel=0;
       var avgMicLevel = 0;
 
       function setup(){
         createCanvas(0, 0);
         mic = new p5.AudioIn()
+        fft = new p5.FFT();
+        fft.setInput(mic, 128);
         mic.start();
         eat = Elm.fullscreen(Elm.ElmAudioTest, 
         {
-          micLevel:0
+          micLevel:0,
+          bassLevel:0,
+          midLevel:0,
+          highLevel:0
         }
         );
       }
       
       function draw(){
+        // mic level
         micLevel = mic.getLevel();
         avgMicLevel = getAvgMicLevel(micLevel);
         eat.ports.micLevel.send(avgMicLevel);
+        // fft bass, mid, highs
+        fft.analyze();
+        bassLevel = fft.getEnergy("bass");
+        midLevel = fft.getEnergy("mid");
+        highLevel = fft.getEnergy("treble");
+        eat.ports.bassLevel.send(bassLevel);
+        eat.ports.midLevel.send(midLevel);
+        eat.ports.highLevel.send(highLevel);
       }
 
       function getAvgMicLevel(inputLevel) {

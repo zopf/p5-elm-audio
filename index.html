@@ -1,26 +1,33 @@
 <html>
+  <head>
+    <script src="http://cdn.jsdelivr.net/p5.js/0.3.5/p5.min.js"></script>
+    <script src="http://cdn.jsdelivr.net/p5.js/0.3.5/addons/p5.sound.js"></script>
+    <script src="http://cdn.jsdelivr.net/p5.js/0.3.5/addons/p5.dom.js"></script>
+    <script src="elm-runtime.js"></script>
+    <script src="build/ElmAudioTest.js"></script>
+  </head>
+  <body>
+    <script>
 
-<head>
+      var mic, fft, eat;
+      function setup(){
+        createCanvas(0, 0);
+        mic = new p5.AudioIn()
+        // fft = new p5.FFT();
+        mic.start();
+        eat = Elm.fullscreen(Elm.ElmAudioTest, 
+        {
+          micLevel:0
+        }
+        );
+      }
+      function draw(){
+        //background(0);
+        micLevel = mic.getLevel();
+        eat.ports.micLevel.send(micLevel);
+        //ellipse(width/2, constrain(height-micLevel*height*5, 0, height), 10, 10);
+      }
 
-  <script src="http://cdn.jsdelivr.net/p5.js/0.3.5/p5.min.js"></script>
-  <script src="http://cdn.jsdelivr.net/p5.js/0.3.5/addons/p5.dom.js"></script>
-  <script src="http://cdn.jsdelivr.net/p5.js/0.3.5/addons/p5.sound.js"></script>
-
-</head>
-
-<body>
-<script>
-  var mic;
-function setup(){
-  mic = new p5.AudioIn()
-  mic.start();
-}
-function draw(){
-  background(0);
-  micLevel = mic.getLevel();
-  ellipse(width/2, constrain(height-micLevel*height*5, 0, height), 10, 10);
-}
-</script>
-
-</body>
+    </script>
+  </body>
 </html>

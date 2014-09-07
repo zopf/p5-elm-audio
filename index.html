@@ -13,7 +13,9 @@
       var buf = [];
       var bufLen = 5;
       var bufIdx = 0;
+      var micLevel = 0;
       var avgMicLevel = 0;
+
       function setup(){
         createCanvas(0, 0);
         mic = new p5.AudioIn()
@@ -24,18 +26,23 @@
         }
         );
       }
+      
       function draw(){
         micLevel = mic.getLevel();
+        avgMicLevel = getAvgMicLevel(micLevel);
+        eat.ports.micLevel.send(avgMicLevel);
+      }
+
+      function getAvgMicLevel(inputLevel) {
         if(buf.length < bufLen)
-          buf.push(micLevel);
+          buf.push(inputLevel);
         else {
           bufIdx += 1;
           if( bufIdx >= bufLen )
             bufIdx = 0;
-          buf[bufIdx] = micLevel;
+          buf[bufIdx] = inputLevel;
         }
-        avgMicLevel = avg(buf);
-        eat.ports.micLevel.send(avgMicLevel);
+        return avg(buf);
       }
 
       function avg(arr) {
